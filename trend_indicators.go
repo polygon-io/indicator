@@ -8,7 +8,7 @@ package indicator
 import (
 	"math"
 
-	"github.com/cinar/indicator/container/bst"
+	"github.com/polygon-io/indicator/container/bst"
 )
 
 // Trend indicator.
@@ -170,13 +170,13 @@ func Ema(period int, values []float64) []float64 {
 // Signal = 9-Period EMA of MACD.
 //
 // Returns MACD, signal.
-func Macd(closing []float64) ([]float64, []float64) {
-	ema12 := Ema(12, closing)
-	ema26 := Ema(26, closing)
-	macd := subtract(ema12, ema26)
-	signal := Ema(9, macd)
+func Macd(prices []float64, shortWindow, longWindow, signalWindow int) ([]float64, []float64, []float64) {
+	emaShort := Ema(shortWindow, prices)
+	emaLong := Ema(longWindow, prices)
+	macd := subtract(emaShort, emaLong)
+	signal := Ema(signalWindow, macd)
 
-	return macd, signal
+	return macd, signal, subtract(macd, signal)
 }
 
 // The Mass Index (MI) uses the high-low range to identify trend reversals
@@ -267,12 +267,12 @@ func Min(period int, values []float64) []float64 {
 // PSAR = PSAR[i - 1] - ((PSAR[i - 1] - EP) * AF)
 //
 // If the trend is Falling:
-//  - PSAR is the maximum of PSAR or the previous two high values.
-//  - If the current high is greather than or equals to PSAR, use EP.
+//   - PSAR is the maximum of PSAR or the previous two high values.
+//   - If the current high is greather than or equals to PSAR, use EP.
 //
 // If the trend is Rising:
-//  - PSAR is the minimum of PSAR or the previous two low values.
-//  - If the current low is less than or equals to PSAR, use EP.
+//   - PSAR is the minimum of PSAR or the previous two low values.
+//   - If the current low is less than or equals to PSAR, use EP.
 //
 // If PSAR is greater than the closing, trend is falling, and the EP
 // is set to the minimum of EP or the low.
@@ -361,9 +361,10 @@ func Qstick(period int, opening, closing []float64) []float64 {
 // crosses above 80%, and oversold when they crosses below
 // 20%. The J line represents the divergence.
 //
-//
 // RSV = ((Closing - Min(Low, rPeriod))
-//       / (Max(High, rPeriod) - Min(Low, rPeriod))) * 100
+//
+//	/ (Max(High, rPeriod) - Min(Low, rPeriod))) * 100
+//
 // K = Sma(RSV, kPeriod)
 // D = Sma(K, dPeriod)
 // J = (3 * K) - (2 * D)
@@ -498,9 +499,12 @@ func Tema(period int, values []float64) []float64 {
 // Trima function calculates the Triangular Moving Average (TRIMA).
 //
 // If period is even:
-//   TRIMA = SMA(period / 2, SMA((period / 2) + 1, values))
+//
+//	TRIMA = SMA(period / 2, SMA((period / 2) + 1, values))
+//
 // If period is odd:
-//   TRIMA = SMA((period + 1) / 2, SMA((period + 1) / 2, values))
+//
+//	TRIMA = SMA((period + 1) / 2, SMA((period + 1) / 2, values))
 //
 // Returns trima.
 func Trima(period int, values []float64) []float64 {

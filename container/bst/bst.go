@@ -1,7 +1,7 @@
 package bst
 
 import (
-	"github.com/cinar/indicator/container"
+	"github.com/polygon-io/indicator/container"
 )
 
 // BST node.

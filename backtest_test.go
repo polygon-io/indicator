@@ -9,7 +9,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cinar/indicator"
+	"github.com/polygon-io/indicator"
 )
 
 func TestNormalizeActions(t *testing.T) {
