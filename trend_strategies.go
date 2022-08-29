@@ -91,7 +91,7 @@ func DefaultKdjStrategy(asset *Asset) []Action {
 func MacdStrategy(asset *Asset) []Action {
 	actions := make([]Action, len(asset.Date))
 
-	macd, signal := Macd(asset.Closing)
+	macd, signal, _ := Macd(asset.Closing, 12, 26, 9)
 
 	for i := 0; i < len(actions); i++ {
 		if macd[i] > signal[i] {
