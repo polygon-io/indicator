@@ -8,7 +8,7 @@ package indicator
 import (
 	"math"
 
-	"github.com/cinar/indicator/container/bst"
+	"github.com/polygon-io/indicator/container/bst"
 )
 
 // Trend indicator.
