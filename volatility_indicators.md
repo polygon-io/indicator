@@ -3,7 +3,7 @@
 Volatility indicators measure the rate of movement regardless of its direction.
 
 - [Acceleration Bands](#acceleration-bands)
-- [Actual True Range (ATR)](#actual-true-range-atr)
+- [Average True Range (ATR)](#average-true-range-atr)
 - [Bollinger Band Width](#bollinger-band-width)
 - [Bollinger Bands](#bollinger-bands)
 - [Chandelier Exit](#chandelier-exit)
@@ -27,12 +27,12 @@ Lower Band = SMA(Low * (1 + 4 * (High - Low) / (High + Low)))
 upperBand, middleBand, lowerBand := indicator.AccelerationBands(high, low, closing)
 ```
 
-#### Actual True Range (ATR)
+#### Average True Range (ATR)
 
 The [Atr](https://pkg.go.dev/github.com/cinar/indicator#Atr) function calculates a technical analysis indicator that measures market volatility by decomposing the entire range of stock prices for that period.
 
 ```
-TR = Max((High - Low), (High - Closing), (Closing - Low))
+TR = Max((High - Low), Abs(High - Previous Closing), Abs(Low - Previous Closing))
 ATR = 14-Period SMA TR
 ```
 
