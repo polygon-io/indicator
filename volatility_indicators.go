@@ -32,7 +32,7 @@ func AccelerationBands(high, low, closing []float64) ([]float64, []float64, []fl
 // Average True Range (ATR). It is a technical analysis indicator that measures market
 // volatility by decomposing the entire range of stock prices for that period.
 //
-// TR = Max((High - Low), (High - Closing), (Closing - Low))
+// TR = Max((High - Low), Abs(High - Previous Closing), Abs(Low - Previous Closing))
 // ATR = SMA TR
 //
 // Returns tr, atr
@@ -42,7 +42,10 @@ func Atr(period int, high, low, closing []float64) ([]float64, []float64) {
 	tr := make([]float64, len(closing))
 
 	for i := 0; i < len(tr); i++ {
-		tr[i] = math.Max(high[i]-low[i], math.Max(high[i]-closing[i], closing[i]-low[i]))
+		if i == 0 {
+			continue
+		}
+		tr[i] = math.Max(high[i]-low[i], math.Max(math.Abs(high[i]-closing[i-1]), math.Abs(low[i]-closing[i-1])))
 	}
 
 	atr := Sma(period, tr)
